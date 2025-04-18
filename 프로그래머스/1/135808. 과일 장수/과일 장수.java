@@ -1,21 +1,18 @@
 import java.util.Arrays;
 
 class Solution {
-
     public int solution(int k, int m, int[] score) {
+        // 점수 내림차순 정렬
         Arrays.sort(score);
+        
         int sum = 0;
-        for(int i=score.length-1; i>score.length%m;){
-            int temp = 0;
-            int min = score[i];
-            for(int j=0; j<m; j++){
-                temp += score[i];
-                min = Math.min(min, score[i--]);
-            }
-            sum+=min*m;
+        int n = score.length;
+        
+        // 큰 점수부터 m개씩 묶어서 최소값 * m
+        for (int i = n - m; i >= 0; i -= m) {
+            sum += score[i] * m; // score[i]가 해당 묶음 중 최소값
         }
+        
         return sum;
     }
-
-
 }
