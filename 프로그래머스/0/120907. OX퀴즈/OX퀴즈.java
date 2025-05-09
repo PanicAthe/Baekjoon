@@ -8,17 +8,9 @@ class Solution {
             int y = Integer.parseInt(words[2]);
             int z = Integer.parseInt(words[4]);
             if(op.equals("-")) {
-                if(x-y==z){
-                    answer[i] = "O";
-                }else{
-                    answer[i] = "X";
-                }
+                answer[i] = (x-y==z)? "O":"X";
             }else if(op.equals("+")) {
-                if(x+y==z){
-                    answer[i] = "O";
-                }else{
-                    answer[i] = "X";
-                }
+                answer[i] = (x+y==z)? "O":"X";
             }
         }
         return answer;
