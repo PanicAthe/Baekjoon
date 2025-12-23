@@ -18,16 +18,11 @@ class Solution {
                 // 마지막 알파벳 업데이트
                 c = word.charAt(word.length()-1);
             }else{              
-                // 몇 번째 단어였는지
-                int count = i + 1;
-                // 탈락자 번호
-                answer[0] = (count%n==0)? n : count%n;
-                // 탈락자에게 몇 번째 차례 였는지
-                answer[1] = (count%n==0)? count/n : count/n+1;
+                // 탈락자 번호, 차례 계산                
+                answer = new int[]{(i%n)+1, (i/n)+1};
                 break;
             }    
         }       
-
         return answer;
     }
 }
