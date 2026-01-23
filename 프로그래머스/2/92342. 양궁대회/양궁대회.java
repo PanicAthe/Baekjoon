@@ -2,59 +2,61 @@ import java.util.*;
 
 class Solution {
     
-    int[] globalInfo;
-    int[] answer;
-    int dif = 0;
+    // 최대 점수차
+    static int maxDif;
+    static int[] globalInfo;
+    static int[] answer;
     
-    public void dfs(int arrow, int index, int[] arr, int peach, int lion){
+    public int[] solution(int n, int[] info) {
+        maxDif = 0; // 초기화 필수
+        answer = new int[]{-1}; // 초기화 필수
+        globalInfo = info;
+        dfs(0, new int[11], 0, n);
+        return answer;
+    }
+    
+    public static void dfs(int index, int[] lionInfo, int dif, int left){
+        
         if(index==11){
-            // 라이언과 어피치의 점수 차
-            int temp = lion - peach;
-            
-            // 라이언이 이겼다면
-            if(temp>0){
-                arr[10] += arrow;
-                if(dif==temp){
-                    // 가장 낮은 점수를 더 많이 맞힌 경우를 찾기
-                    for (int i = 10; i >= 0; i--) {
-                        if (arr[i] > answer[i]) {
-                            answer = Arrays.copyOf(arr, 11);
+            // 라이언이 우승하고 최대 점수라면
+            if(dif>0 && dif>=maxDif){
+                // 가장 낮은 점수에 남은 화살 처리
+                lionInfo[10] += left;
+                if(dif>maxDif){
+                    maxDif = dif;
+                    answer = lionInfo.clone();
+                }else{
+                    for(int i=10; i>=0; i--){
+                        if(lionInfo[i]>answer[i]){
+                            answer = lionInfo.clone();
                             break;
-                        } else if (arr[i] < answer[i]) {
+                        }else if(lionInfo[i]<answer[i]){
                             break;
                         }
                     }
-
-                }else if(dif<temp){
-                    dif = temp;
-                    answer = Arrays.copyOf(arr, 11);
                 }
-                arr[10] -= arrow;
+                lionInfo[10] -= left;
             }
             return;
-        }
-        int peachArrow = globalInfo[index];
-        // 라이언은 현재 점수에 화살을 맞히지 못함
-        if(peachArrow>0){
-            // 어피치가 현재 점수를 획득
-            dfs(arrow, index+1, arr, peach+10-index, lion);
+            
         }else{
-            // 라이언과 어피치 모두 현재 점수에 단 하나의 화살도 맞히지 못함.
-            dfs(arrow, index+1, arr, peach, lion);
+            
+            // 현재 index에서 무승부인 경우
+            if(globalInfo[index]==0){
+                dfs(index+1, lionInfo, dif, left);
+            }
+            // 현재 index에서 어피치가 점수를 얻는 경우
+            if(globalInfo[index]>0){
+                dfs(index+1, lionInfo, dif-(10-index), left);
+            }
+            
+            // 현재 index에서 라이언이 점수를 얻는 경우
+            if(globalInfo[index]<left){
+                lionInfo[index] = globalInfo[index]+1;
+                dfs(index+1, lionInfo, dif+(10-index), left- lionInfo[index]);
+                lionInfo[index] = 0;
+            }            
+            
         }
-        // 라이언이 현재 점수 획득
-        if(peachArrow<arrow){
-            arr[index] = peachArrow + 1;
-            dfs(arrow-arr[index], index+1, arr, peach, lion+10-index);
-            arr[index] = 0;
-        }
-    }
-    
-    public int[] solution(int n, int[] info) {
-        globalInfo = info;
-        answer = new int[11];
-        dfs(n, 0, new int[11], 0, 0);
-        if(dif==0) return new int[]{-1};
-        return answer;
     }
 }
