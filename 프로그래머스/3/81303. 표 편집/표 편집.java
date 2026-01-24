@@ -3,68 +3,86 @@ import java.util.*;
 class Solution {
     public String solution(int n, int k, String[] cmd) {
         
-        StringBuilder answer = new StringBuilder();
-        Stack<Integer> deleted = new Stack<>();
-        int[] prev = new int[n];
+        // 삭제된 index 쌓아둘 스택
+        Stack<Integer> stack = new Stack<>();
+        
+        char[] result = new char[n];
+        // 각 행의 다음 행 저장.
         int[] next = new int[n];
+        // 각 행의 직전 행 저장.
+        int[] prev = new int[n];
         
+        // up은 앞으로 <-
         for(int i=0; i<n; i++){
-            prev[i] = i-1;
+            result[i] = 'O';
             next[i] = i+1;
-            answer.append("O");
+            prev[i] = i-1;
         }
-        prev[0] = -1;
-        next[n-1] = -1;
         
+        // 각 명령어 실행
         for(int i=0; i<cmd.length; i++){
-            String[] commands = cmd[i].split(" ");
-            if(commands[0].equals("C")){
-                // 행 삭제
-                answer.setCharAt(k, 'X');
-                // 삭제된 행 스택에 넣기
-                deleted.push(k);
-
-                int tempNext = next[k];
-                int tempPrev = prev[k];
-                if(tempNext == -1){ 
-                    //삭제된 행이 가장 마지막 행, 바로 윗 행을 선택
-                    k = tempPrev;
-                    // 삭제된 행의 앞 행은 마지막 행으로 표시
-                    next[tempPrev] = -1;
+            String command = cmd[i];
+            
+            if(command.length()==1){
+                if(command.equals("C")){
+                    // 현재 선택된 행 삭제하기.
+                    stack.push(k);
+                    result[k] = 'X';
+                    
+                    if(prev[k]==-1){
+                        //선택된 행이 천장
+                        prev[next[k]] = prev[k];
+                        k = next[k];
+                        
+                    }else if(next[k]==n){
+                        //선택된 행이 바닥
+                        next[prev[k]] = next[k];
+                        // 바로 윗행 선택
+                        k = prev[k];
+                        
+                    }else{
+                        next[prev[k]] = next[k];
+                        prev[next[k]] = prev[k];
+                        k = next[k];
+                    }                  
+                    
                 }else{
-                    // 삭제된 행의 아래 행을 선택
-                    k = tempNext;
-                    // 삭제된 행 앞 뒤 연결
-                    prev[tempNext] = tempPrev;
-                    if (tempPrev != -1) {
-                        next[tempPrev] = tempNext;
+                    // 가장 최근에 삭제된 행 복구하기
+                    // 현재 선택된 행을 바뀌지 않음
+                    int tempK = stack.pop();
+                    result[tempK] = 'O';
+                    
+                    if(prev[tempK]==-1){
+                        //선택된 행이 천장
+                        prev[next[tempK]] = tempK;
+                        
+                    }else if(next[tempK]==n){
+                        //선택된 행이 바닥
+                        next[prev[tempK]] = tempK;
+                        
+                    }else{
+                        next[prev[tempK]] = tempK;
+                        prev[next[tempK]] = tempK;
                     }
                 }
-                
-            }else if(commands[0].equals("Z")){
-                // 가장 최근 삭제된 행 복구
-                int restore = deleted.pop();
-                answer.setCharAt(restore, 'O');
-                
-                //앞 뒤 다시 연결 시키기
-                if (prev[restore] != -1) next[prev[restore]] = restore;
-                if (next[restore] != -1) prev[next[restore]] = restore;
-                
             }else{
-                int count = Integer.parseInt(commands[1]);
-                if(commands[0].equals("U")){
-                    for(int j=0; j<count; j++){
+                String[] arr = command.split(" ");
+                int x = Integer.parseInt(arr[1]);
+                
+                if(command.charAt(0)=='U'){
+                    //현재 선택된 행에서 X칸 위에 있는 행 선택
+                    for(int j=0; j<x; j++){
                         k = prev[k];
                     }
                 }else{
-                    for(int j=0; j<count; j++){
+                    // 현재 선택된 행에서 X칸 아래에 있는 행 선택
+                    for(int j=0; j<x; j++){
                         k = next[k];
                     }
                 }
             }
-            
         }
         
-        return answer.toString();
+        return new String(result);
     }
 }
