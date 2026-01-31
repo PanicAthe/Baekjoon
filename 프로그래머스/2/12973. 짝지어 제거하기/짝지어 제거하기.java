@@ -4,23 +4,29 @@ class Solution
 {
     public int solution(String s)
     {
-        int answer = 0;
-        System.out.println("Hello Java");
 
-        Stack<Character> stack = new Stack<>();
+        StringBuilder sb = new StringBuilder();
         
         for(int i=0; i<s.length(); i++){
-            char input = s.charAt(i);
-            if(stack.isEmpty()||stack.peek()!=input){
-                stack.push(input);
+            char temp = s.charAt(i);
+            if(sb.length()==0){
+                
+                sb.append(temp);
+                
+            }else if(sb.charAt(sb.length()-1)==temp){
+                
+                sb.delete(sb.length()-1, sb.length());
+                
             }else{
-                stack.pop();
+                
+                sb.append(temp);
             }
         }
-        if(stack.isEmpty()){
-            answer = 1;
+        
+        if(sb.length()==0){
+            return 1;
         }
 
-        return answer;
+        return 0;
     }
 }
