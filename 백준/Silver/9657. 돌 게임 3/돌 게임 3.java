@@ -1,21 +1,40 @@
 import java.util.*;
+import java.lang.*;
+import java.io.*;
 
-public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int N = sc.nextInt();
-        sc.close();
+class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
 
-        boolean[] dp = new boolean[N + 1];
+        // i 개의 돌이 주어졌을 때, 시작하는 사람이 이길지 체크
+        boolean[] dp = new boolean[N+1];
 
-        dp[0] = false; 
-        for (int i = 1; i <= N; i++) {
-            if (i - 1 >= 0 && !dp[i - 1]) dp[i] = true;
-            else if (i - 3 >= 0 && !dp[i - 3]) dp[i] = true;
-            else if (i - 4 >= 0 && !dp[i - 4]) dp[i] = true;
+        for(int i=1; i<=N; i++){
+            boolean check = false;
+            
+            // i-1 이 false라면 돌 1개를 가져가고 내가 이길 수 있음 
+            if(!dp[i-1]){
+                check = true;
+            }
+
+            // i-3 이 false라면 돌 3개를 가져가고 내가 이길 수 있음 
+            if(i>=3 && !dp[i-3]){
+                check = true;
+            }
+
+            // i-4 이 false라면 돌 4개를 가져가고 내가 이길 수 있음
+            if(i>=4 && !dp[i-4]){
+                check = true;
+            }
+
+            dp[i] = check;
         }
 
-        if (dp[N]) System.out.println("SK");
-        else System.out.println("CY");
+        if(dp[N]){
+            System.out.print("SK");
+        }else{
+            System.out.print("CY");
+        }
     }
 }
