@@ -1,0 +1,10 @@
+-- ITEM_TREE는 업그레이드 직전의 부모 ID가 적혀져있음
+-- 따라서 부모 ID로 한번도 쓰인 적 없는 아이템을 구하면
+-- 업그레이드 할 수 없는 아이템
+
+SELECT I.ITEM_ID, I.ITEM_NAME, I.RARITY
+FROM ITEM_INFO I
+LEFT JOIN ITEM_TREE T
+ON I.ITEM_ID = T.PARENT_ITEM_ID
+WHERE T.PARENT_ITEM_ID IS NULL
+ORDER BY I.ITEM_ID DESC;
