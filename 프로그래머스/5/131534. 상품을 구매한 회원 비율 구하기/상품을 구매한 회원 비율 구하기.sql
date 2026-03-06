@@ -1,10 +1,6 @@
 -- 2021년에 가입한 회원 중 상품을 구매한 회원수 / 2021년에 가입한 전체 회원 수
 -- 을 년,월 별로 출력
 
-
--- 2021년에 가입한 회원의 상품 구매 이력이 있는 년 월을 뽑을 필요가 있음..
-
-
 SELECT  YEAR(S.SALES_DATE) AS YEAR,  
     MONTH(S.SALES_DATE) AS MONTH,
     COUNT(DISTINCT I.USER_ID) AS PURCHASED_USERS,
