@@ -1,0 +1,20 @@
+-- 0 ~ 23까지의 시간을 생성하는 재귀 CTE
+WITH RECURSIVE HOURS AS (
+    -- 시작 값: 0시 생성
+    SELECT 0 AS HOUR
+    UNION ALL
+    -- 이전 값에 +1 하면서 시간 증가
+    SELECT HOUR + 1
+    FROM HOURS
+    -- 23까지만 생성 (0~23)
+    WHERE HOUR < 23
+)
+
+SELECT 
+    H.HOUR,
+    COUNT(O.ANIMAL_ID) AS COUNT
+FROM HOURS H
+LEFT JOIN ANIMAL_OUTS O
+    ON H.HOUR = HOUR(O.DATETIME)
+GROUP BY H.HOUR
+ORDER BY H.HOUR;
