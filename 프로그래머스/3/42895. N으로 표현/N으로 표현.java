@@ -3,7 +3,7 @@ import java.util.*;
 class Solution {
     public int solution(int N, int number) {
         
-        // dp[i] : 1번 숫자 N를 포함해서 만들 수 있는 수 집합
+        // dp[i] : i번 숫자 N를 포함해서 만들 수 있는 수 집합
         Set<Integer>[] dp = new HashSet[9];
         
         for(int i=1; i<=8; i++){
@@ -29,6 +29,7 @@ class Solution {
                 }
             }
             
+            // i번 숫자를 포함 시 number를 완성한다면
             if(dp[i].contains(number))
                 return i;
         }
