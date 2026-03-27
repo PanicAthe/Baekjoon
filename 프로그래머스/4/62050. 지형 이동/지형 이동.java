@@ -12,35 +12,50 @@ class Solution {
         boolean[][] visited = new boolean[N][N];
         int[] dx = {0,0,-1,1};
         int[] dy = {1,-1,0,0};
+        int result = 0;
         
-        PriorityQueue<int[]> pq = new PriorityQueue<>((a,b)->a[2]-b[2]);
+        // 사다리 설치 비용 오름차순
+        PriorityQueue<int[]> que = new PriorityQueue<>((a,b)->{
+            return a[2]-b[2];
+        });
         
-        pq.offer(new int[]{0,0,0}); // x, y, cost
-        int answer = 0;
+        que.offer(new int[]{0,0,0});
         
-        while(!pq.isEmpty()){
-            int[] cur = pq.poll();
+        // prim
+        while(!que.isEmpty()){
+            
+            int[] cur = que.poll();
             int x = cur[0];
             int y = cur[1];
-            int cost = cur[2];
             
+            // 이미 최소 비용으로 방문 한 경우
             if(visited[x][y]) continue;
-            visited[x][y] = true;
-            answer += cost;
             
-            for(int k=0; k<4; k++){
-                int nx = x + dx[k];
-                int ny = y + dy[k];
+            // 최소 비용에 합산
+            result += cur[2];
+            visited[x][y] = true;
+            
+            for(int i=0; i<4;i++){
+                int nx = x + dx[i];
+                int ny = y + dy[i];
                 
                 if(nx<0||ny<0||nx>=N||ny>=N||visited[nx][ny]) continue;
                 
-                int diff = Math.abs(land[x][y] - land[nx][ny]);
-                if(diff <= height) diff = 0;
+                int diff = Math.abs(land[x][y]-land[nx][ny]);
                 
-                pq.offer(new int[]{nx, ny, diff});
+                // 사다리를 놓아야함
+                if(diff>height){
+                    que.offer(new int[]{nx, ny, diff});
+                }else{
+                    // 사다리 없이 갈 수 있음
+                    que.offer(new int[]{nx, ny, 0});
+                }
+    
+                
             }
         }
         
-        return answer;
+        return result;
+        
     }
 }
