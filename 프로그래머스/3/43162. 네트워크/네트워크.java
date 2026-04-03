@@ -2,32 +2,35 @@ import java.util.*;
 
 class Solution {
     
-    boolean[] visited;
-    int[][] globalComputers;
+    static int[] parent;
     
-    public void dfs(int index){
-        for(int i=0; i<globalComputers.length; i++){
-            if(!visited[i]&&globalComputers[index][i]==1){
-                visited[i] = true;
-                dfs(i);
-            }
-        }
+    static int root(int x){
+        if(parent[x] == x) return x;
+        // 경로 단축
+        return parent[x] = root(parent[x]);
     }
     
     public int solution(int n, int[][] computers) {
-        int answer = 0;
         
-        globalComputers = computers;
-        visited = new boolean[computers.length];
+        parent = new int[n];
+        for(int i=0; i<n; i++) parent[i] = i;
         
-        for(int i=0; i<computers.length; i++){
-            if(!visited[i]){
-                visited[i] = true;
-                dfs(i);
-                answer++;
+        for(int i=0; i<n; i++){
+            for(int j=0; j<n; j++){
+                if(i==j || computers[i][j]==0) continue;
+                int x = root(i);
+                int y = root(j);
+                
+                // 루트가 다르다면 합치기
+                if(x!=y){
+                    parent[x] = j;
+                }
             }
         }
-
-        return answer;
+        
+        Set<Integer> set = new HashSet<>();
+        for(int i=0; i<n; i++) set.add(root(i));
+        
+        return set.size();
     }
 }
