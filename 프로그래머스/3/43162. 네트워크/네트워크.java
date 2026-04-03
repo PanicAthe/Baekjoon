@@ -12,6 +12,7 @@ class Solution {
     
     public int solution(int n, int[][] computers) {
         
+        int answer = n;
         parent = new int[n];
         for(int i=0; i<n; i++) parent[i] = i;
         
@@ -23,14 +24,12 @@ class Solution {
                 
                 // 루트가 다르다면 합치기
                 if(x!=y){
-                    parent[x] = j;
+                    parent[x] = y;
+                    answer--;
                 }
             }
         }
         
-        Set<Integer> set = new HashSet<>();
-        for(int i=0; i<n; i++) set.add(root(i));
-        
-        return set.size();
+        return answer;
     }
 }
