@@ -18,8 +18,6 @@ class Solution {
         ListNode result = new ListNode(sum % 10);
         ListNode cur = result;
         
-        // 뒷자리부터 가져옴..
-        // 결과 앞자리일수록 next여야함
         while(l1.next != null || l2.next != null){
             sum = carry;
 
