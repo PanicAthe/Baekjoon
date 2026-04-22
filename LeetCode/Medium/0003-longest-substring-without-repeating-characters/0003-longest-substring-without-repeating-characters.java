@@ -10,7 +10,7 @@ class Solution {
             for(int j=i; j<s.length(); j++){
                 char c = s.charAt(j);
                 if(set.containsKey(c)){
-                    i = set.get(c) + 1;
+                    i = set.get(c);
                     break;
                 }else{
                     cur++;
